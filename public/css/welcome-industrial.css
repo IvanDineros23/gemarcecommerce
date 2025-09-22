@@ -30,22 +30,22 @@ body {
     color: #fff;
 }
 .login-industrial .form-control:focus {
-    border-color: #ff6a00;
+    border-color: #f97316;
     box-shadow: 0 0 0 0.2rem rgba(255,106,0,.25);
 }
 .login-industrial .btn-industrial {
-    background: #ff6a00;
+    background: #f97316;
     color: #fff;
     font-weight: 600;
     border: none;
     transition: background 0.2s;
 }
 .login-industrial .btn-industrial:hover {
-    background: #e45f00;
+    background: #f97316;
     color: #fff;
 }
 .login-industrial .forgot-link, .login-industrial .create-link {
-    color: #ff9800;
+    color: #f97316;
     text-decoration: none;
 }
 .login-industrial .forgot-link:hover, .login-industrial .create-link:hover {
@@ -53,8 +53,8 @@ body {
     text-decoration: underline;
 }
 .login-industrial .form-check-input:checked {
-    background-color: #ff6a00;
-    border-color: #ff6a00;
+    background-color: #f97316;
+    border-color: #f97316;
 }
 .industrial-bg {
     background: url('/images/stockroom industrial.png');
