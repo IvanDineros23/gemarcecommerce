@@ -1,0 +1,62 @@
+/* register-industrial.css - Custom styles for register page only */
+
+body.register-bg {
+    background: url('/images/stockroom industrial.png') center center no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    filter: blur(0px) brightness(0.5);
+}
+
+.register-industrial {
+    background: #fff;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
+    padding: 2.5rem 2rem 2rem 2rem;
+    max-width: 410px;
+    margin: 2rem auto;
+}
+.register-industrial .logo {
+    height: 48px;
+    margin-bottom: 1.5rem;
+}
+.register-industrial .brand {
+    color: #222;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+}
+.register-industrial .form-label, .register-industrial .form-check-label, .register-industrial .form-text {
+    color: #222 !important;
+}
+.register-industrial .text-muted {
+    color: #555 !important;
+}
+.register-industrial .form-control {
+    background: #fff;
+    border: 1px solid #bbb;
+    color: #222;
+}
+.register-industrial .form-control:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 0.2rem rgba(255,106,0,.15);
+}
+.register-industrial .btn-industrial {
+    background: #ff6a00;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    transition: background 0.2s;
+}
+.register-industrial .btn-industrial:hover {
+    background: #e45f00;
+    color: #fff;
+}
+.register-industrial .create-link {
+    color: #ff6a00;
+    text-decoration: none;
+}
+.register-industrial .create-link:hover {
+    color: #222;
+    text-decoration: underline;
+}
