@@ -1,0 +1,69 @@
+body {
+    background: #181b1f;
+    min-height: 100vh;
+}
+.login-industrial {
+    background: #23262b;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+    padding: 2.5rem 2rem 2rem 2rem;
+    max-width: 410px;
+    margin: 2rem auto;
+}
+.login-industrial .logo {
+    height: 48px;
+    margin-bottom: 1.5rem;
+}
+.login-industrial .brand {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+}
+.login-industrial .form-label, .login-industrial .form-check-label, .login-industrial .text-muted, .login-industrial .form-control, .login-industrial .form-text {
+    color: #e0e0e0 !important;
+}
+.login-industrial .form-control {
+    background: #23262b;
+    border: 1px solid #444851;
+    color: #fff;
+}
+.login-industrial .form-control:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 0.2rem rgba(255,106,0,.25);
+}
+.login-industrial .btn-industrial {
+    background: #ff6a00;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    transition: background 0.2s;
+}
+.login-industrial .btn-industrial:hover {
+    background: #e45f00;
+    color: #fff;
+}
+.login-industrial .forgot-link, .login-industrial .create-link {
+    color: #ff9800;
+    text-decoration: none;
+}
+.login-industrial .forgot-link:hover, .login-industrial .create-link:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+.login-industrial .form-check-input:checked {
+    background-color: #ff6a00;
+    border-color: #ff6a00;
+}
+.industrial-bg {
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80');
+    background-size: cover;
+    background-position: center;
+    filter: blur(2px) brightness(0.5);
+    min-height: 100vh;
+}
+@media (max-width: 767px) {
+    .industrial-bg { display: none; }
+    .login-industrial { margin: 2rem 1rem; }
+}
