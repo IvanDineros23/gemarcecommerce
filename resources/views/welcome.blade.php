@@ -10,50 +10,23 @@
     <link rel="stylesheet" href="{{ asset('css/welcome-industrial.css') }}">
 </head>
 <body>
-    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center p-0" style="background:#181b1f;">
+    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center p-0">
         <div class="row w-100 g-0" style="min-height: 100vh;">
             <!-- Left: Industrial BG -->
             <div class="col-md-7 d-none d-md-block industrial-bg"></div>
-            <!-- Right: Login Form -->
+            <!-- Right: Landing Content -->
             <div class="col-12 col-md-5 d-flex align-items-center justify-content-center" style="background:#181b1f;">
-                <div class="login-industrial w-100">
+                <div class="login-industrial w-100" style="background:#fff; color:#222; max-width:520px;">
                     <div class="text-center mb-4">
                         <img src="{{ asset('images/gemarclogo.png') }}" alt="Gemarc" class="logo">
-                        <div class="brand">GEMARC ENTERPRISES INC</div>
                     </div>
-                    <h2 class="fw-bold text-white mb-1">Sign in</h2>
-                    <p class="text-muted mb-4">Access orders, quotes, and shipment tracking.</p>
-                    <form method="POST" action="{{ route('login') }}" novalidate>
-                        @csrf
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus class="form-control @error('email') is-invalid @enderror" placeholder="name@company.com">
-                            @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <label for="password" class="form-label mb-0">Password</label>
-                                @if (Route::has('password.request'))
-                                    <a class="forgot-link small" href="{{ route('password.request') }}">Forgot?</a>
-                                @endif
-                            </div>
-                            <input id="password" type="password" name="password" required autocomplete="current-password" class="form-control @error('password') is-invalid @enderror" placeholder="••••••••">
-                            @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                        </div>
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                            <label class="form-check-label" for="remember">Remember me</label>
-                        </div>
-                        <button class="btn btn-industrial w-100 mb-3" type="submit">Sign in</button>
-                    </form>
-                    @if (Route::has('register'))
-                        <p class="mb-0 text-center small text-muted">
-                            New to GEMARC? <a href="{{ route('register') }}" class="create-link">Create account</a>
-                        </p>
-                    @endif
-                    <p class="text-center text-muted small mt-3 mb-0">
-                        ISO-certified supplier • Secure sign-in
-                    </p>
+                    <h2 class="fw-bold mb-3" style="color:#222;">Welcome to GEMARC Ecommerce</h2>
+                    <p class="mb-4" style="color:#444;">Your trusted ISO-certified supplier for industrial and commercial needs.<br>Order products, request quotes, and track shipments—all in one place.</p>
+                    <div class="d-grid gap-2 mb-2">
+                        <a href="{{ route('login') }}" class="btn btn-industrial">Sign in</a>
+                        <a href="{{ route('register') }}" class="btn btn-success" style="background:#28a745; color:#fff; border:none;">Create account</a>
+                    </div>
+                    <div class="text-muted small mt-4 text-center">&copy; {{ date('Y') }} Gemarc Enterprises Inc. All rights reserved.</div>
                 </div>
             </div>
         </div>

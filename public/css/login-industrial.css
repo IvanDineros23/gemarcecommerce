@@ -1,11 +1,9 @@
-body {
-    background: #181b1f;
-    min-height: 100vh;
-}
+/* login-industrial.css - Custom styles for login page only */
+
 .login-industrial {
-    background: #23262b;
+    background: #fff;
     border-radius: 1.5rem;
-    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
     padding: 2.5rem 2rem 2rem 2rem;
     max-width: 410px;
     margin: 2rem auto;
@@ -15,23 +13,26 @@ body {
     margin-bottom: 1.5rem;
 }
 .login-industrial .brand {
-    color: #fff;
+    color: #222;
     font-weight: 700;
     font-size: 1.3rem;
     letter-spacing: 1px;
     margin-bottom: 1.5rem;
 }
-.login-industrial .form-label, .login-industrial .form-check-label, .login-industrial .text-muted, .login-industrial .form-control, .login-industrial .form-text {
-    color: #000000 !important;
+.login-industrial .form-label, .login-industrial .form-check-label, .login-industrial .form-text {
+    color: #222 !important;
+}
+.login-industrial .text-muted {
+    color: #555 !important;
 }
 .login-industrial .form-control {
-    background: #23262b;
-    border: 1px solid #444851;
-    color: #fff;
+    background: #fff;
+    border: 1px solid #bbb;
+    color: #222;
 }
 .login-industrial .form-control:focus {
     border-color: #ff6a00;
-    box-shadow: 0 0 0 0.2rem rgba(255,106,0,.25);
+    box-shadow: 0 0 0 0.2rem rgba(255,106,0,.15);
 }
 .login-industrial .btn-industrial {
     background: #ff6a00;
@@ -45,25 +46,14 @@ body {
     color: #fff;
 }
 .login-industrial .forgot-link, .login-industrial .create-link {
-    color: #ff9800;
+    color: #ff6a00;
     text-decoration: none;
 }
 .login-industrial .forgot-link:hover, .login-industrial .create-link:hover {
-    color: #fff;
+    color: #222;
     text-decoration: underline;
 }
 .login-industrial .form-check-input:checked {
     background-color: #ff6a00;
     border-color: #ff6a00;
-}
-.industrial-bg {
-    background: url('/images/stockroom industrial.png');
-    background-size: backcover;
-    background-position: center;
-    filter: blur(2px) brightness(0.5);
-    min-height: 100vh;
-}
-@media (max-width: 767px) {
-    .industrial-bg { display: none; }
-    .login-industrial { margin: 2rem 1rem; }
 }
