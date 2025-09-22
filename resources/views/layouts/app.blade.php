@@ -29,8 +29,30 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
+            <main class="min-h-screen">
+              {{-- Header area (optional) --}}
+              @if (isset($header))
+                  <header class="border-bottom bg-white">
+                      <div class="container py-3">
+                          {{ $header }}
+                      </div>
+                  </header>
+              @elseif (View::hasSection('header'))
+                  <header class="border-bottom bg-white">
+                      <div class="container py-3">
+                          @yield('header')
+                      </div>
+                  </header>
+              @endif
+
+              {{-- Page content --}}
+              <div class="container py-4">
+                @if (isset($slot))
+                    {{ $slot }}              {{-- component mode: <x-app-layout> --}}
+                @else
+                    @yield('content')        {{-- classic mode: @extends + @section --}}
+                @endif
+              </div>
             </main>
         </div>
     </body>
