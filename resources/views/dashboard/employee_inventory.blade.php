@@ -1,9 +1,13 @@
 @extends('layouts.app')
+@section('title', 'Inventory Management | Gemarc Enterprises Inc.')
 @section('content')
 <div class="max-w-5xl mx-auto py-10">
     <h1 class="text-2xl font-bold text-orange-700 mb-6">Inventory Management</h1>
+    <div class="mb-4">
+        <input type="text" id="inventory-search" placeholder="Search item..." class="border border-gray-300 rounded px-3 py-2 w-full max-w-md focus:outline-none focus:ring-2 focus:ring-orange-400" onkeyup="filterInventoryTable()">
+    </div>
     <div class="bg-white rounded-xl shadow p-6">
-        <table class="min-w-full text-sm">
+        <table class="min-w-full text-sm" id="inventory-table">
             <thead>
                 <tr class="text-left border-b">
                     <th class="py-2">Name</th>
@@ -30,4 +34,21 @@
         </table>
     </div>
 </div>
+@push('scripts')
+<script>
+function filterInventoryTable() {
+    const input = document.getElementById('inventory-search');
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('inventory-table');
+    const trs = table.getElementsByTagName('tr');
+    for (let i = 1; i < trs.length; i++) { // skip header
+        const td = trs[i].getElementsByTagName('td')[0];
+        if (td) {
+            const txtValue = td.textContent || td.innerText;
+            trs[i].style.display = txtValue.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+        }
+    }
+}
+</script>
+@endpush
 @endsection

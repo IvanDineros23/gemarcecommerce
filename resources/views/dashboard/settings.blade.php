@@ -16,12 +16,16 @@
                     <input type="text" class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 cursor-not-allowed" value="Ivan Dineros" readonly disabled>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-1">Email</label>
-                    <input type="email" x-model="email" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="your@email.com">
+                    <label class="block text-gray-700 mb-1">Current Email</label>
+                    <input type="email" class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 cursor-not-allowed" value="{{ Auth::user()->email }}" readonly disabled>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-1">Confirm Email</label>
-                    <input type="email" x-model="confirm" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Confirm your email">
+                    <label class="block text-gray-700 mb-1">New Email</label>
+                    <input type="email" x-model="email" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Enter new email">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-1">Confirm New Email</label>
+                    <input type="email" x-model="confirm" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Confirm new email">
                     <template x-if="confirm.length > 0">
                         <div class="text-xs mt-1" :class="match ? 'text-green-600' : 'text-red-500'">
                             <span x-show="match">✔ Emails match</span>
