@@ -8,21 +8,21 @@
             <p class="text-gray-700">Welcome, {{ auth()->user()->name }}! Manage products, inventory, and orders here.</p>
         </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <a href="#" class="bg-white rounded-xl shadow p-6 flex flex-col items-center hover:bg-green-50 transition">
-            <img src="/images/gemarclogo.png" alt="Products" class="w-12 h-12 mb-2">
-            <div class="font-bold text-green-800">Product Management</div>
-            <div class="text-xs text-gray-500">Add, edit, or remove products</div>
+    <div class="w-full flex flex-col md:flex-row gap-4 mb-8">
+        <a href="{{ route('employee.products.index') }}" class="flex-1 max-w-xs bg-white rounded-xl shadow p-4 flex flex-col items-center hover:bg-green-50 transition mx-auto md:mx-0">
+            <img src="/images/gemarclogo.png" alt="Products" class="w-16 h-16 mb-2">
+            <div class="font-bold text-green-800 text-center">Product Management</div>
+            <div class="text-xs text-gray-500 text-center">Add, edit, or remove products</div>
         </a>
-        <a href="#" class="bg-white rounded-xl shadow p-6 flex flex-col items-center hover:bg-green-50 transition">
-            <img src="/images/gemarclogo.png" alt="Inventory" class="w-12 h-12 mb-2">
-            <div class="font-bold text-orange-600">Inventory</div>
-            <div class="text-xs text-gray-500">View and update stock levels</div>
+    <a href="{{ route('employee.inventory.index') }}" class="flex-1 max-w-xs bg-white rounded-xl shadow p-4 flex flex-col items-center hover:bg-green-50 transition mx-auto md:mx-0">
+            <img src="/images/gemarclogo.png" alt="Inventory" class="w-16 h-16 mb-2">
+            <div class="font-bold text-orange-600 text-center">Inventory</div>
+            <div class="text-xs text-gray-500 text-center">View and update stock levels</div>
         </a>
-        <a href="#" class="bg-white rounded-xl shadow p-6 flex flex-col items-center hover:bg-green-50 transition">
-            <img src="/images/gemarclogo.png" alt="Orders" class="w-12 h-12 mb-2">
-            <div class="font-bold text-green-800">Order Management</div>
-            <div class="text-xs text-gray-500">Process and track orders</div>
+        <a href="#" class="flex-1 max-w-xs bg-white rounded-xl shadow p-4 flex flex-col items-center hover:bg-green-50 transition mx-auto md:mx-0">
+            <img src="/images/gemarclogo.png" alt="Orders" class="w-16 h-16 mb-2">
+            <div class="font-bold text-green-800 text-center">Order Management</div>
+            <div class="text-xs text-gray-500 text-center">Process and track orders</div>
         </a>
     </div>
     <div class="bg-white rounded-xl shadow p-6">

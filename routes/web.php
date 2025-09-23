@@ -1,4 +1,21 @@
 <?php
+// Employee Inventory Management
+use App\Http\Controllers\EmployeeInventoryController;
+Route::middleware(['auth', 'verified'])->prefix('employee')->name('employee.')->group(function () {
+    Route::get('/inventory', [EmployeeInventoryController::class, 'index'])->name('inventory.index');
+    Route::patch('/inventory/{product}', [EmployeeInventoryController::class, 'update'])->name('inventory.update');
+});
+
+// Employee Product Management
+use App\Http\Controllers\EmployeeProductController;
+Route::middleware(['auth', 'verified'])->prefix('employee')->name('employee.')->group(function () {
+    Route::get('/products', [EmployeeProductController::class, 'index'])->name('products.index');
+    Route::post('/products', [EmployeeProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [EmployeeProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [EmployeeProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [EmployeeProductController::class, 'destroy'])->name('products.destroy');
+});
+
 // Employee chat/messages management page
 Route::middleware(['auth', 'verified'])->get('/employee/chats', function () {
     return view('dashboard.employee_chat');
@@ -17,6 +34,7 @@ use App\Http\Controllers\ChatController;
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/chat/fetch', [ChatController::class, 'fetch']);
     Route::post('/chat/send', [ChatController::class, 'send']);
+    Route::post('/chat/clear', [ChatController::class, 'clear']);
 });
 
 // Dashboard search route (demo)
@@ -28,6 +46,7 @@ Route::get('/dashboard/search', function (\Illuminate\Http\Request $request) {
 // Cart page route for users
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/cart', fn() => view('placeholders.cart'))->name('cart.index');
+    Route::view('/settings', 'dashboard.settings')->name('settings');
 });
 
 // Placeholder routes for dashboard links
@@ -88,8 +107,10 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])->prefix('admin')->na
     Route::view('/user-management', 'admin.placeholders.user_management')->name('user_management');
 });
 
+use App\Models\Product;
 Route::get('/shop', function () {
-    return view('shop.index');
+    $products = Product::where('is_active', 1)->orderByDesc('created_at')->get();
+    return view('shop.index', compact('products'));
 })->name('shop.index');
 
 require __DIR__.'/auth.php';

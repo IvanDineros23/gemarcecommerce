@@ -71,4 +71,29 @@ class ChatController extends Controller
         $users = DB::table('users')->whereIn('id', $userIds)->get(['id','name','email']);
         return response()->json($users);
     }
+
+    // Clear chat between user and employee
+    public function clear(Request $request)
+    {
+        $user = Auth::user();
+        $toUserId = $request->input('to_user_id');
+        if (!$user->isUser() || !$toUserId) {
+            return response()->json(['success' => false, 'error' => 'Unauthorized'], 403);
+        }
+        // Delete all messages between the user and the employee (properly grouped)
+        DB::table('chat_messages')
+            ->where(function($q) use ($user, $toUserId) {
+                $q->where(function($q2) use ($user, $toUserId) {
+                    $q2->where('sender_id', $user->id)->where('receiver_id', $toUserId);
+                })->orWhere(function($q2) use ($user, $toUserId) {
+                    $q2->where('sender_id', $toUserId)->where('receiver_id', $user->id);
+                })
+                // Also delete messages sent by user to all employees (receiver_id = 0)
+                ->orWhere(function($q2) use ($user) {
+                    $q2->where('sender_id', $user->id)->where('receiver_id', 0);
+                });
+            })
+            ->delete();
+        return response()->json(['success' => true]);
+    }
 }

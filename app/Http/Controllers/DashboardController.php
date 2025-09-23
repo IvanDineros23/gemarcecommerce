@@ -27,6 +27,8 @@ class DashboardController extends Controller
             'savedLists'   => \App\Models\SavedList::where('user_id',$u->id)->latest()->limit(5)->get(),
             'activeCarts'  => \App\Models\Cart::where('user_id',$u->id)->whereNull('checked_out_at')
                                    ->latest()->limit(3)->get(),
+            // Automated recommended products: 4 random active products
+            'recommendedProducts' => \App\Models\Product::where('is_active', true)->inRandomOrder()->limit(4)->get(),
         ];
 
         if ($u->isUser()) {

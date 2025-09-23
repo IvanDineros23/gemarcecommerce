@@ -12,49 +12,11 @@
 
                 <!-- Navigation Links (no cart icon here) -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-green-700 hover:text-orange-600 font-bold">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <!-- Shop Dropdown (unchanged) -->
-                    <div x-data="{ open: false }" class="relative" @mouseenter="open = true" @mouseleave="open = false">
-                        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-700 hover:text-orange-600 focus:outline-none">
-                            Shop
-                            <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div x-show="open" class="absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50" x-cloak>
-                            <div class="py-1 grid grid-cols-2 gap-2">
-                                <div>
-                                    <div class="px-4 py-2 text-xs font-semibold text-gray-500">By Application</div>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Conveying</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Power</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Fasteners</a>
-                                </div>
-                                <div>
-                                    <div class="px-4 py-2 text-xs font-semibold text-gray-500">By Spec</div>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Voltage</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Material</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">IP Rating</a>
-                                </div>
-                                <div>
-                                    <div class="px-4 py-2 text-xs font-semibold text-gray-500">By Brand</div>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Brand A</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Brand B</a>
-                                </div>
-                                <div>
-                                    <div class="px-4 py-2 text-xs font-semibold text-gray-500">By Standard</div>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">ANSI</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">DIN</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">IEC</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <!-- Cart Icon and User Dropdown on the right (hide cart for employees) -->
             <div class="hidden sm:flex sm:items-center sm:ms-6 gap-4">
-                @if(auth()->user()->isUser())
                 @if(auth()->user()->isEmployee())
                 <!-- Messages Button for Employee -->
                 <div class="relative group flex items-center ml-2">
@@ -68,6 +30,7 @@
                     </div>
                 </div>
                 @endif
+                @if(auth()->user()->isUser())
                 <!-- Cart Icon with Tooltip -->
                 <div class="relative group flex items-center">
                     <a href="{{ route('cart.index') }}" class="relative">
@@ -113,7 +76,7 @@
                         <div class="py-3 px-2 grid gap-1">
                             <a href="#" class="block rounded-md px-5 py-2 text-[15px] font-normal text-gray-700 hover:bg-gray-100 transition">Orders</a>
                             <a href="#" class="block rounded-md px-5 py-2 text-[15px] font-normal text-gray-700 hover:bg-gray-100 transition">Saved Items</a>
-                            <a href="{{ route('profile.edit') }}" class="block rounded-md px-5 py-2 text-[15px] font-normal text-gray-700 hover:bg-gray-100 transition">Settings</a>
+                            <a href="{{ route('settings') }}" class="block rounded-md px-5 py-2 text-[15px] font-normal text-gray-700 hover:bg-gray-100 transition">Settings</a>
                             <div class="border-t border-gray-200 my-2"></div>
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
