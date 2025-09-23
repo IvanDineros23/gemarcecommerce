@@ -14,7 +14,8 @@
                     <tr>
                         <td style="text-align:center; padding:32px 32px 16px 32px;">
                             <img src="https://res.cloudinary.com/dytjw8uya/image/upload/v1758531199/gemarclogo_ayrwn8.png" alt="Gemarc Enterprises Inc." style="max-width:160px; margin-bottom:8px; display:block; margin-left:auto; margin-right:auto;">
-                            <div style="font-size:1.2rem; font-weight:bold; color:#1db954; margin-top:4px;">Gemarc Enterprises Inc.</div>
+                            <div style="font-size:1.2rem; font-weight:bold; color:#1db954; margin-top:4px;">Gemarc Enterprises Inc. E-commerce</div>
+                            </div>
                         </td>
                     </tr>
                     <tr>

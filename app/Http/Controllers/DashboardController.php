@@ -10,7 +10,7 @@ class DashboardController extends Controller
     {
         $u = auth()->user();
 
-        return view('dashboard.index', [
+        $data = [
             'kpis' => [
                 'openOrders'  => \App\Models\Order::where('user_id',$u->id)
                                    ->whereIn('status',['pending','paid','processing'])->count(),
@@ -27,6 +27,14 @@ class DashboardController extends Controller
             'savedLists'   => \App\Models\SavedList::where('user_id',$u->id)->latest()->limit(5)->get(),
             'activeCarts'  => \App\Models\Cart::where('user_id',$u->id)->whereNull('checked_out_at')
                                    ->latest()->limit(3)->get(),
-        ]);
+        ];
+
+        if ($u->isUser()) {
+            return view('dashboard.user', $data);
+        } elseif ($u->isEmployee()) {
+            return view('dashboard.employee', $data);
+        } else {
+            return view('dashboard.index', $data);
+        }
     }
 }

@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-white border-b border-green-600 shadow-lg">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -6,19 +6,18 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <x-application-logo class="block h-9 w-auto" />
                     </a>
                 </div>
 
-                <!-- Navigation Links with Consolidated Shop Dropdown and E-commerce Actions -->
+                <!-- Navigation Links (no cart icon here) -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-green-700 hover:text-orange-600 font-bold">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-
-                    <!-- Consolidated Shop Dropdown -->
+                    <!-- Shop Dropdown (unchanged) -->
                     <div x-data="{ open: false }" class="relative" @mouseenter="open = true" @mouseleave="open = false">
-                        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-orange-600 focus:outline-none">
+                        <button class="inline-flex items-center px-3 py-2 text-sm font-medium text-green-700 hover:text-orange-600 focus:outline-none">
                             Shop
                             <svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                         </button>
@@ -50,13 +49,54 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- E-commerce Actions moved to user dropdown -->
                 </div>
             </div>
 
-            <!-- User/E-commerce Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <!-- Cart Icon and User Dropdown on the right (hide cart for employees) -->
+            <div class="hidden sm:flex sm:items-center sm:ms-6 gap-4">
+                @if(auth()->user()->isUser())
+                @if(auth()->user()->isEmployee())
+                <!-- Messages Button for Employee -->
+                <div class="relative group flex items-center ml-2">
+                    <a href="{{ route('employee.chat.page') }}" class="relative">
+                        <svg class="w-7 h-7 text-green-700 group-hover:text-orange-600 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4-4.03 7-9 7-1.18 0-2.31-.13-3.36-.38-.37-.09-.77-.08-1.12.07l-2.13.85a1 1 0 01-1.32-1.32l.85-2.13c.15-.35.16-.75.07-1.12A7.96 7.96 0 013 12c0-4 4.03-7 9-7s9 3 9 7z" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <div class="absolute left-1/2 -translate-x-1/2 mt-10 opacity-0 group-hover:opacity-100 pointer-events-none transition bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-50 shadow-lg">
+                        Chat Management
+                    </div>
+                </div>
+                @endif
+                <!-- Cart Icon with Tooltip -->
+                <div class="relative group flex items-center">
+                    <a href="{{ route('cart.index') }}" class="relative">
+                        <svg class="w-7 h-7 text-green-700 group-hover:text-orange-600 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                        </svg>
+                        @if(isset($activeCarts) && count($activeCarts))
+                            <span class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full px-1.5 py-0.5">{{ count($activeCarts) }}</span>
+                        @endif
+                    </a>
+                    <div class="absolute left-1/2 -translate-x-1/2 mt-10 opacity-0 group-hover:opacity-100 pointer-events-none transition bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-50 shadow-lg">
+                        See your cart
+                    </div>
+                </div>
+                <!-- Chat/Messages Button -->
+                <div class="relative group flex items-center ml-2">
+                    <a href="{{ route('chat.page') }}" class="relative">
+                        <svg class="w-7 h-7 text-green-700 group-hover:text-orange-600 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4-4.03 7-9 7-1.18 0-2.31-.13-3.36-.38-.37-.09-.77-.08-1.12.07l-2.13.85a1 1 0 01-1.32-1.32l.85-2.13c.15-.35.16-.75.07-1.12A7.96 7.96 0 013 12c0-4 4.03-7 9-7s9 3 9 7z" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <div class="absolute left-1/2 -translate-x-1/2 mt-10 opacity-0 group-hover:opacity-100 pointer-events-none transition bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-50 shadow-lg">
+                        Chat with Employee
+                    </div>
+                </div>
+                @endif
+                <!-- User Dropdown -->
                 <x-dropdown align="right" width="56">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -71,7 +111,6 @@
 
                     <x-slot name="content">
                         <div class="py-3 px-2 grid gap-1">
-                            <a href="#" class="block rounded-md px-5 py-2 text-[15px] font-normal text-gray-700 hover:bg-gray-100 transition">View Cart</a>
                             <a href="#" class="block rounded-md px-5 py-2 text-[15px] font-normal text-gray-700 hover:bg-gray-100 transition">Orders</a>
                             <a href="#" class="block rounded-md px-5 py-2 text-[15px] font-normal text-gray-700 hover:bg-gray-100 transition">Saved Items</a>
                             <a href="{{ route('profile.edit') }}" class="block rounded-md px-5 py-2 text-[15px] font-normal text-gray-700 hover:bg-gray-100 transition">Settings</a>
