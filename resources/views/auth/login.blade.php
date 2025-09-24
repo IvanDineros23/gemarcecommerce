@@ -50,7 +50,10 @@
                 <a class="forgot-link small" href="{{ route('password.request') }}">Forgot?</a>
               @endif
             </div>
-            <input id="password" type="password" name="password" required autocomplete="current-password" class="form-control @error('password') is-invalid @enderror" placeholder="••••••••">
+            <input id="password" type="password" name="password" required autocomplete="current-password" class="form-control @error('password') is-invalid @enderror" placeholder="••••••••" onkeyup="checkCapsLock(event)" onkeydown="checkCapsLock(event)">
+            <div id="caps-lock-alert" class="alert alert-warning py-2 px-3 mt-2 mb-0 small d-none" role="alert" style="font-size:0.95em;">
+              <strong>Caps Lock is ON.</strong> Passwords are case-sensitive.
+            </div>
             @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
           </div>
           <div class="form-check mb-4">
@@ -70,5 +73,16 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function checkCapsLock(e) {
+        var caps = e.getModifierState && e.getModifierState('CapsLock');
+        var alert = document.getElementById('caps-lock-alert');
+        if (caps) {
+          alert.classList.remove('d-none');
+        } else {
+          alert.classList.add('d-none');
+        }
+      }
+    </script>
 </body>
 </html>

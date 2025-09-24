@@ -41,7 +41,9 @@ class EmployeeProductController extends Controller
                 'sort_order' => 0,
             ]);
         }
-        return redirect()->route('employee.products.index')->with('success', 'Product added!');
+        return redirect()->route('employee.products.index')
+            ->with('success', 'Product added!')
+            ->with('added_product_name', $product->name);
     }
 
     public function edit(Product $product)

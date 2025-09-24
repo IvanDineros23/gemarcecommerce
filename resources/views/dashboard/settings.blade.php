@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('content')
 <div class="max-w-2xl mx-auto py-10" x-data="{}">
+    @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-transition class="mb-4 flex items-center justify-between bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded">
+            <span class="font-semibold">{{ session('success') }}</span>
+            <button @click="show = false" class="ml-4 text-green-700 hover:text-green-900">&times;</button>
+        </div>
+    @endif
     <h1 class="text-2xl font-bold text-green-800 mb-6">Settings</h1>
 
     <!-- Basic Settings Dropdown -->
@@ -78,16 +84,17 @@
     </div>
 
     <!-- Payment Details Dropdown -->
-    <div x-data="{ open: false }" class="bg-white rounded-xl shadow mb-4">
+    <div x-data="{ open: false, method: '{{ old('method', Auth::user()->payment_details['method'] ?? 'card') }}', ewallet: '{{ old('ewallet', Auth::user()->payment_details['ewallet'] ?? 'gcash') }}' }" class="bg-white rounded-xl shadow mb-4">
         <button @click="open = !open" class="w-full flex justify-between items-center px-6 py-4 text-lg font-semibold text-green-700 focus:outline-none">
             Payment Details
             <svg :class="{'rotate-180': open}" class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
         </button>
         <div x-show="open" class="px-6 pb-6 pt-2">
-            <form x-data="{ method: 'card', ewallet: 'gcash' }">
+            <form method="POST" action="{{ route('settings.savePaymentDetails') }}" x-data="{ method: '{{ old('method', Auth::user()->payment_details['method'] ?? 'card') }}', ewallet: '{{ old('ewallet', Auth::user()->payment_details['ewallet'] ?? 'gcash') }}' }">
+                @csrf
                 <div class="mb-4">
                     <label class="block text-gray-700 mb-1">Payment Method</label>
-                    <select x-model="method" class="w-full border border-gray-300 rounded px-3 py-2">
+                    <select name="method" x-model="method" class="w-full border border-gray-300 rounded px-3 py-2" required>
                         <option value="card">Card Payment</option>
                         <option value="ewallet">E-Wallet</option>
                         <option value="check">Check Payment</option>
@@ -97,20 +104,20 @@
                     <div>
                         <div class="mb-4">
                             <label class="block text-gray-700 mb-1">Cardholder Name</label>
-                            <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Juan Dela Cruz">
+                            <input type="text" name="card_name" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Juan Dela Cruz" value="{{ old('card_name', Auth::user()->payment_details['card_name'] ?? '') }}">
                         </div>
                         <div class="mb-4">
                             <label class="block text-gray-700 mb-1">Card Number</label>
-                            <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="1234 5678 9012 3456">
+                            <input type="text" name="card_number" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="1234 5678 9012 3456" value="{{ old('card_number', Auth::user()->payment_details['card_number'] ?? '') }}">
                         </div>
                         <div class="flex gap-4 mb-4">
                             <div class="flex-1">
                                 <label class="block text-gray-700 mb-1">Expiry</label>
-                                <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="MM/YY">
+                                <input type="text" name="expiry" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="MM/YY" value="{{ old('expiry', Auth::user()->payment_details['expiry'] ?? '') }}">
                             </div>
                             <div class="flex-1">
                                 <label class="block text-gray-700 mb-1">CVV</label>
-                                <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="123">
+                                <input type="text" name="cvv" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="123" value="{{ old('cvv', Auth::user()->payment_details['cvv'] ?? '') }}">
                             </div>
                         </div>
                     </div>
@@ -119,7 +126,7 @@
                     <div>
                         <div class="mb-4">
                             <label class="block text-gray-700 mb-1">E-Wallet Type</label>
-                            <select x-model="ewallet" class="w-full border border-gray-300 rounded px-3 py-2">
+                            <select name="ewallet" x-model="ewallet" class="w-full border border-gray-300 rounded px-3 py-2">
                                 <option value="gcash">GCash</option>
                                 <option value="maya">Maya</option>
                                 <option value="paypal">PayPal</option>
@@ -129,19 +136,19 @@
                         <template x-if="ewallet === 'gcash' || ewallet === 'maya'">
                             <div class="mb-4">
                                 <label class="block text-gray-700 mb-1">Mobile Number</label>
-                                <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="09xxxxxxxxx">
+                                <input type="text" name="mobile" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="09xxxxxxxxx" value="{{ old('mobile', Auth::user()->payment_details['mobile'] ?? '') }}">
                             </div>
                         </template>
                         <template x-if="ewallet === 'paypal'">
                             <div class="mb-4">
                                 <label class="block text-gray-700 mb-1">PayPal Email</label>
-                                <input type="email" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="your@email.com">
+                                <input type="email" name="paypal_email" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="your@email.com" value="{{ old('paypal_email', Auth::user()->payment_details['paypal_email'] ?? '') }}">
                             </div>
                         </template>
                         <template x-if="ewallet === 'other'">
                             <div class="mb-4">
                                 <label class="block text-gray-700 mb-1">E-Wallet Details</label>
-                                <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="E-Wallet Name/Number">
+                                <input type="text" name="ewallet_details" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="E-Wallet Name/Number" value="{{ old('ewallet_details', Auth::user()->payment_details['ewallet_details'] ?? '') }}">
                             </div>
                         </template>
                     </div>
@@ -149,44 +156,43 @@
                 <template x-if="method === 'check'">
                     <div class="mb-4">
                         <label class="block text-gray-700 mb-1">Check Payee Name</label>
-                        <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Payee Name">
+                        <input type="text" name="check_payee" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Payee Name" value="{{ old('check_payee', Auth::user()->payment_details['check_payee'] ?? '') }}">
                     </div>
                 </template>
-                <button type="button" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 font-semibold">Save Payment Details</button>
+                <button type="submit" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 font-semibold">Save Payment Details</button>
             </form>
         </div>
     </div>
 
-    <!-- Delivery Option Dropdown -->
-    <div x-data="{ open: false }" class="bg-white rounded-xl shadow mb-4">
+    <!-- Delivery Address Dropdown -->
+    <div x-data="{ open: false, category: '{{ old('category', Auth::user()->delivery_option['category'] ?? 'home') }}' }" class="bg-white rounded-xl shadow mb-4">
         <button @click="open = !open" class="w-full flex justify-between items-center px-6 py-4 text-lg font-semibold text-green-700 focus:outline-none">
-            Delivery Option
+            Delivery Address
             <svg :class="{'rotate-180': open}" class="w-5 h-5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
         </button>
         <div x-show="open" class="px-6 pb-6 pt-2">
-            <form x-data="{ method: 'standard' }">
+            <form method="POST" action="{{ route('settings.saveDeliveryAddress') }}" x-data="{ category: '{{ old('category', Auth::user()->delivery_option['category'] ?? 'home') }}' }">
+                @csrf
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-1">Delivery Method</label>
-                    <select x-model="method" class="w-full border border-gray-300 rounded px-3 py-2">
-                        <option value="standard">Standard Delivery</option>
-                        <option value="express">Express Delivery</option>
-                        <option value="pickup">Pickup</option>
+                    <label class="block text-gray-700 mb-1">Address</label>
+                    <input type="text" name="address" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="123 Main St, City, Province" value="{{ old('address', Auth::user()->delivery_option['address'] ?? '') }}" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-1">Category</label>
+                    <select name="category" x-model="category" class="w-full border border-gray-300 rounded px-3 py-2" required>
+                        <option value="home">Home</option>
+                        <option value="office">Office</option>
+                        <option value="school">School</option>
                         <option value="other">Other</option>
                     </select>
                 </div>
-                <template x-if="method !== 'pickup'">
+                <template x-if="category === 'other'">
                     <div class="mb-4">
-                        <label class="block text-gray-700 mb-1">Delivery Address</label>
-                        <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="123 Main St, City, Province">
+                        <label class="block text-gray-700 mb-1">Other Category</label>
+                        <input type="text" name="other_category" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Specify category" value="{{ old('other_category') }}">
                     </div>
                 </template>
-                <template x-if="method === 'other'">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-1">Other Delivery Details</label>
-                        <input type="text" class="w-full border border-gray-300 rounded px-3 py-2" placeholder="Describe delivery method">
-                    </div>
-                </template>
-                <button type="button" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 font-semibold">Save Delivery Option</button>
+                <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 font-semibold">Save Delivery Address</button>
             </form>
         </div>
     </div>

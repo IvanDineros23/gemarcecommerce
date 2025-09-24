@@ -24,10 +24,15 @@ function productModal() {
     <div class="flex flex-col items-center justify-center mb-8">
         <h1 class="text-3xl font-bold text-green-800 mb-2">Shop All Products</h1>
         <p class="text-gray-700 mb-4">Browse all products offered by <span class="text-orange-600 font-semibold">Gemarc Enterprises Inc.</span></p>
-        <form class="w-full max-w-xl flex gap-2 justify-center">
-            <input type="text" class="border border-green-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-orange-400" placeholder="Search products...">
-            <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 font-semibold">Search</button>
-        </form>
+        <div x-data="{ search: '{{ addslashes($q ?? '') }}' }" class="w-full max-w-xl flex gap-2 justify-center">
+            <form class="flex gap-2 w-full" method="GET" action="{{ route('shop.index') }}" @submit.prevent="window.location='{{ route('shop.index') }}'+(search ? ('?q='+encodeURIComponent(search)) : '')">
+                <input type="text" name="q" x-model="search" class="border border-green-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-orange-400" placeholder="Search products...">
+                <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 font-semibold">Search</button>
+                <template x-if="search">
+                    <button type="button" @click="search=''; window.location='{{ route('shop.index') }}'" class="bg-gray-200 text-gray-700 px-3 py-2 rounded hover:bg-gray-300 font-semibold">Clear</button>
+                </template>
+            </form>
+        </div>
     </div>
 
     <div x-data="productModal()"
@@ -54,7 +59,12 @@ function productModal() {
                         <div class="mt-auto flex items-center justify-between">
                             <div class="text-orange-600 font-bold text-lg">₱{{ number_format($product->price,2) }}</div>
                             @if($product->stock > 0)
-                                <span class="bg-green-600 text-white px-3 py-1 rounded text-sm font-semibold">Add to Cart</span>
+                                <form method="POST" action="{{ route('cart.add') }}" class="inline">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded text-sm font-semibold hover:bg-green-700">Add to Cart</button>
+                                </form>
                             @else
                                 <span class="bg-gray-400 text-white px-3 py-1 rounded text-sm font-semibold cursor-not-allowed">Out of Stock</span>
                             @endif
@@ -78,7 +88,12 @@ function productModal() {
                     <div class="text-gray-700 mb-4 text-center" x-text="modalProduct.description"></div>
                     <div class="flex gap-2">
                         <template x-if="modalProduct.stock > 0">
-                            <button class="bg-green-600 text-white px-4 py-2 rounded font-semibold">Add to Cart</button>
+                            <form method="POST" action="{{ route('cart.add') }}">
+                                @csrf
+                                <input type="hidden" name="product_id" :value="modalProduct.id">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded font-semibold hover:bg-green-700">Add to Cart</button>
+                            </form>
                         </template>
                         <template x-if="modalProduct.stock == 0">
                             <button class="bg-gray-400 text-white px-4 py-2 rounded font-semibold cursor-not-allowed" disabled>Out of Stock</button>

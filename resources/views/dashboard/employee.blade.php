@@ -2,24 +2,11 @@
 
 @section('content')
 <div class="py-8">
-    <!-- Analytics Charts -->
-    <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-white rounded-xl shadow p-4">
-            <div class="font-bold text-green-800 mb-2">Stock Levels</div>
-            <canvas id="stockLevelsChart" height="80" style="max-width: 100%; max-height: 220px;"></canvas>
-        </div>
-        <div class="bg-white rounded-xl shadow p-4">
-            <div class="font-bold text-green-800 mb-2">Inventory Value</div>
-            <canvas id="inventoryValueChart" height="80" style="max-width: 100%; max-height: 220px;"></canvas>
-        </div>
+    <div class="flex flex-col items-center justify-center mb-8 text-center">
+        <h1 class="text-3xl font-bold text-green-800 mb-2">Employee Dashboard</h1>
+        <p class="text-gray-700">Welcome, {{ auth()->user()->name }}! Manage products, inventory, and orders here.</p>
     </div>
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-        <div>
-            <h1 class="text-3xl font-bold text-green-800 mb-2">Employee Dashboard</h1>
-            <p class="text-gray-700">Welcome, {{ auth()->user()->name }}! Manage products, inventory, and orders here.</p>
-        </div>
-    </div>
-    <div class="w-full flex flex-col md:flex-row gap-4 mb-8">
+    <div class="w-full flex flex-col md:flex-row gap-4 mb-8 justify-center items-center">
         <a href="{{ route('employee.products.index') }}" class="flex-1 max-w-xs bg-white rounded-xl shadow p-4 flex flex-col items-center hover:bg-green-50 transition mx-auto md:mx-0">
             <!-- Modern Product Icon -->
             <svg class="w-16 h-16 mb-2 text-green-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -53,20 +40,40 @@
             <div class="text-xs text-gray-500 text-center">Process and track orders</div>
         </a>
     </div>
+    <!-- Analytics Charts -->
+    <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white rounded-xl shadow p-4">
+            <div class="font-bold text-green-800 mb-2">Stock Levels</div>
+            <canvas id="stockLevelsChart" height="80" style="max-width: 100%; max-height: 220px;"></canvas>
+        </div>
+        <div class="bg-white rounded-xl shadow p-4">
+            <div class="font-bold text-green-800 mb-2">Inventory Value</div>
+            <canvas id="inventoryValueChart" height="80" style="max-width: 100%; max-height: 220px;"></canvas>
+        </div>
+        <div class="bg-white rounded-xl shadow p-4">
+            <div class="font-bold text-green-800 mb-2 flex items-center gap-2">Revenue
+                <select id="revenueType" class="ml-2 border rounded px-2 py-1 text-sm">
+                    <option value="year">Per Year</option>
+                    <option value="month">Per Month (Current Year)</option>
+                </select>
+            </div>
+            <canvas id="revenueChart" height="80" style="max-width: 100%; max-height: 220px;"></canvas>
+        </div>
+    </div>
     <div class="bg-white rounded-xl shadow p-6">
         <div class="text-lg font-bold text-green-800 mb-2">Messages & Notifications</div>
         <ul class="divide-y">
             @forelse ($notifications as $notif)
                 <li class="flex items-center justify-between py-4">
                     <div>
-                        @if ($notif->type === 'chat')
-                            <div class="font-semibold">{{ $notif->user }}</div>
-                            <div class="text-xs text-gray-500">{{ $notif->created_at->format('Y-m-d H:i') }}</div>
-                            <div class="mt-1">{{ $notif->message }}</div>
-                        @elseif ($notif->type === 'cart')
+                        @if ($notif['type'] === 'chat')
+                            <div class="font-semibold">{{ $notif['user'] }}</div>
+                            <div class="text-xs text-gray-500">{{ $notif['created_at']->format('Y-m-d H:i') }}</div>
+                            <div class="mt-1">{{ $notif['message'] }}</div>
+                        @elseif ($notif['type'] === 'cart')
                             <div class="font-semibold text-orange-700">Add to Cart Activity</div>
-                            <div class="text-xs text-gray-500">{{ $notif->created_at->format('Y-m-d H:i') }}</div>
-                            <div class="mt-1">{{ $notif->user }} added <b>{{ $notif->qty }}</b> of <b>{{ $notif->product }}</b> to cart.</div>
+                            <div class="text-xs text-gray-500">{{ $notif['created_at']->format('Y-m-d H:i') }}</div>
+                            <div class="mt-1">{{ $notif['user'] }} added <b>{{ $notif['qty'] }}</b> of <b>{{ $notif['product'] }}</b> to cart.</div>
                         @endif
                     </div>
                 </li>
@@ -80,10 +87,35 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     if (window.Chart) {
-        // Example data, replace with real data from backend if needed
-        const stockLabels = @json(\App\Models\Product::pluck('name'));
-        const stockData = @json(\App\Models\Product::pluck('stock'));
-        const valueData = @json(\App\Models\Product::all()->map(fn($p) => $p->stock * $p->price));
+        @php
+            $products = \App\Models\Product::all();
+            $stockLabels = $products->pluck('name');
+            $stockData = $products->pluck('stock');
+            $valueData = $products->map(function($p) { return $p->stock * $p->price; });
+            $revenueLabelsMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            $revenueRawMonth = \App\Models\Order::whereYear('created_at', now()->year)
+                ->where('status', 'paid')
+                ->selectRaw('MONTH(created_at) as month, SUM(total_amount) as revenue')
+                ->groupBy('month')
+                ->pluck('revenue', 'month')->toArray();
+            $revenueArrMonth = array_fill(0, 12, 0);
+            foreach ($revenueRawMonth as $month => $value) {
+                $revenueArrMonth[$month-1] = $value;
+            }
+            $revenueRawYear = \App\Models\Order::where('status', 'paid')
+                ->selectRaw('YEAR(created_at) as year, SUM(total_amount) as revenue')
+                ->groupBy('year')
+                ->pluck('revenue', 'year')->toArray();
+            $revenueLabelsYear = array_keys($revenueRawYear);
+            $revenueArrYear = array_values($revenueRawYear);
+        @endphp
+        const stockLabels = @json($stockLabels);
+        const stockData = @json($stockData);
+        const valueData = @json($valueData);
+        const revenueLabelsMonth = @json($revenueLabelsMonth);
+        const revenueArrMonth = @json($revenueArrMonth);
+        const revenueLabelsYear = @json($revenueLabelsYear);
+        const revenueArrYear = @json($revenueArrYear);
 
         new Chart(document.getElementById('stockLevelsChart').getContext('2d'), {
             type: 'bar',
@@ -115,6 +147,54 @@ document.addEventListener('DOMContentLoaded', function () {
                 responsive: true,
                 plugins: { legend: { position: 'bottom' } }
             }
+        });
+
+        let revenueChart;
+        function renderRevenueChart(type) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            if (revenueChart) revenueChart.destroy();
+            if (type === 'year') {
+                revenueChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: revenueLabelsYear,
+                        datasets: [{
+                            label: 'Revenue per Year',
+                            data: revenueArrYear,
+                            backgroundColor: '#22c55e',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: true, position: 'bottom' } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            } else {
+                revenueChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: revenueLabelsMonth,
+                        datasets: [{
+                            label: 'Revenue per Month',
+                            data: revenueArrMonth,
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34,197,94,0.1)',
+                            fill: true,
+                            tension: 0.3,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: true, position: 'bottom' } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+        }
+        renderRevenueChart('year');
+        document.getElementById('revenueType').addEventListener('change', function(e) {
+            renderRevenueChart(e.target.value);
         });
     }
 });

@@ -44,9 +44,15 @@ Route::get('/dashboard/search', function (\Illuminate\Http\Request $request) {
     return view('dashboard.search', ['q' => $q]);
 })->name('dashboard.search');
 // Cart page route for users
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\SettingsController;
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/cart', fn() => view('placeholders.cart'))->name('cart.index');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
     Route::view('/settings', 'dashboard.settings')->name('settings');
+    Route::post('/settings/delivery-address', [SettingsController::class, 'saveDeliveryAddress'])->name('settings.saveDeliveryAddress');
+    Route::post('/settings/payment-details', [SettingsController::class, 'savePaymentDetails'])->name('settings.savePaymentDetails');
 });
 
 // Placeholder routes for dashboard links
@@ -108,9 +114,20 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])->prefix('admin')->na
 });
 
 use App\Models\Product;
-Route::get('/shop', function () {
-    $products = Product::where('is_active', 1)->orderByDesc('created_at')->get();
-    return view('shop.index', compact('products'));
+Route::get('/shop', function (\Illuminate\Http\Request $request) {
+    $q = $request->input('q');
+    $products = Product::where('is_active', 1)
+        ->when($q, function ($query, $q) {
+            $query->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', "%$q%")
+                    ->orWhere('description', 'like', "%$q%")
+                    ->orWhere('price', 'like', "%$q%")
+                    ;
+            });
+        })
+        ->orderByDesc('created_at')
+        ->get();
+    return view('shop.index', compact('products', 'q'));
 })->name('shop.index');
 
 require __DIR__.'/auth.php';

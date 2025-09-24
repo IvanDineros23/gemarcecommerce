@@ -21,6 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'payment_details',
+        'delivery_option',
+    ];
+
+    protected $casts = [
+        'payment_details' => 'array',
+        'delivery_option' => 'array',
     ];
 
     /**
