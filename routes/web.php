@@ -57,8 +57,12 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\QuoteController;
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::get('/orders/{order}', [CartController::class, 'orderReceipt'])->name('orders.receipt');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+    Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/cart/checkout', [CartController::class, 'processCheckout'])->name('cart.checkout.process');
+    Route::post('/cart/place-order', [CartController::class, 'processCheckout'])->name('cart.place-order');
     Route::view('/settings', 'dashboard.settings')->name('settings');
     Route::post('/settings/delivery-address', [SettingsController::class, 'saveDeliveryAddress'])->name('settings.saveDeliveryAddress');
     Route::post('/settings/payment-details', [SettingsController::class, 'savePaymentDetails'])->name('settings.savePaymentDetails');
@@ -76,8 +80,10 @@ Route::middleware(['auth', 'verified'])->prefix('employee')->name('employee.')->
 });
 
 // Placeholder routes for dashboard links (quotes routes removed to avoid conflict)
+use App\Http\Controllers\OrderController;
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/orders', fn() => view('placeholders.orders'))->name('orders.index');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('/shipments', fn() => view('placeholders.shipments'))->name('shipments.index');
     Route::get('/invoices', fn() => view('placeholders.invoices'))->name('invoices.index');
     Route::get('/quick-order', fn() => view('placeholders.quick_order'))->name('quick-order.show');
@@ -147,5 +153,12 @@ Route::get('/shop', function (\Illuminate\Http\Request $request) {
         ->get();
     return view('shop.index', compact('products', 'q'));
 })->name('shop.index');
+
+// Example route to show real-time date and time using Carbon
+use Carbon\Carbon;
+Route::get('/realtime-date', function () {
+    $now = Carbon::now();
+    return 'Current Date and Time: ' . $now->format('F d, Y h:i A');
+});
 
 require __DIR__.'/auth.php';

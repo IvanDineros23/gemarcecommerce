@@ -47,6 +47,7 @@ return new class extends Migration {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('reference_number')->unique();
             $table->string('status')->default('pending'); // pending, paid, shipped, delivered, canceled
             $table->decimal('total_amount', 10, 2)->default(0);
             $table->string('payment_ref')->nullable()->index();

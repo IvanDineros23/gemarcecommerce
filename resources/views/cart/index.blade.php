@@ -49,7 +49,7 @@
                     <svg :class="{'transform rotate-180': open}" class="h-5 w-5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                 </button>
                 <div x-show="open" x-transition class="bg-gray-50 p-6 rounded-b shadow border-t" style="display: none;">
-                    <form method="POST" action="#">
+                    <form method="GET" action="{{ route('cart.checkout') }}">
                         <h2 class="text-lg font-semibold mb-4">Checkout Options</h2>
                         <div class="mb-4 flex items-center justify-between">
                             <div>
