@@ -32,12 +32,12 @@
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input id="password" type="password" name="password" required autocomplete="new-password" class="form-control @error('password') is-invalid @enderror" placeholder="••••••••">
+                    <input id="password" type="password" name="password" required autocomplete="new-password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter your password">
                     @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                 <div class="mb-3">
                     <label for="password_confirmation" class="form-label">Confirm Password</label>
-                    <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" class="form-control" placeholder="••••••••">
+                    <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" class="form-control" placeholder="Confirm your password">
                 </div>
                 <button class="btn btn-industrial w-100 mb-3" type="submit">Create account</button>
             </form>

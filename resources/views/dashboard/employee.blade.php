@@ -18,7 +18,7 @@
             <div class="font-bold text-green-800 text-center">Product Management</div>
             <div class="text-xs text-gray-500 text-center">Add, edit, or remove products</div>
         </a>
-    <a href="{{ route('employee.inventory.index') }}" class="flex-1 max-w-xs bg-white rounded-xl shadow p-4 flex flex-col items-center hover:bg-green-50 transition mx-auto md:mx-0">
+        <a href="{{ route('employee.inventory.index') }}" class="flex-1 max-w-xs bg-white rounded-xl shadow p-4 flex flex-col items-center hover:bg-green-50 transition mx-auto md:mx-0">
             <!-- Modern Inventory Icon -->
             <svg class="w-16 h-16 mb-2 text-orange-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                 <rect x="4" y="8" width="16" height="10" rx="2" fill="#fef9c3"/>
@@ -38,6 +38,28 @@
             </svg>
             <div class="font-bold text-green-800 text-center">Order Management</div>
             <div class="text-xs text-gray-500 text-center">Process and track orders</div>
+        </a>
+        <a href="{{ route('employee.chat.page') }}" class="flex-1 max-w-xs bg-white rounded-xl shadow p-4 flex flex-col items-center hover:bg-green-50 transition mx-auto md:mx-0">
+            <!-- Chat Management Icon -->
+            <svg class="w-16 h-16 mb-2 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <rect x="3" y="7" width="18" height="10" rx="2" fill="#dbeafe"/>
+                <path d="M3 7V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2" stroke="#2563eb" stroke-width="1.5"/>
+                <circle cx="8" cy="13" r="2" fill="#2563eb"/>
+                <rect x="12" y="11" width="6" height="4" rx="1" fill="#93c5fd"/>
+            </svg>
+            <div class="font-bold text-blue-600 text-center">Chat Management</div>
+            <div class="text-xs text-gray-500 text-center">View and manage chats</div>
+        </a>
+        <a href="{{ route('employee.quotes.index') }}" class="flex-1 max-w-xs bg-white rounded-xl shadow p-4 flex flex-col items-center hover:bg-green-50 transition mx-auto md:mx-0">
+            <!-- Quote Management Icon -->
+            <svg class="w-16 h-16 mb-2 text-purple-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <rect x="3" y="7" width="18" height="10" rx="2" fill="#ede9fe"/>
+                <path d="M3 7V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2" stroke="#7c3aed" stroke-width="1.5"/>
+                <circle cx="8" cy="13" r="2" fill="#7c3aed"/>
+                <rect x="12" y="11" width="6" height="4" rx="1" fill="#c4b5fd"/>
+            </svg>
+            <div class="font-bold text-purple-600 text-center">Quote Management</div>
+            <div class="text-xs text-gray-500 text-center">View and manage quotes</div>
         </a>
     </div>
     <!-- Analytics Charts -->

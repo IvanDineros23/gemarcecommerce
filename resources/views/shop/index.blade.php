@@ -35,9 +35,7 @@ function productModal() {
         </div>
     </div>
 
-    <div x-data="productModal()"
-         @open-product.window="openModal($event.detail)"
-         @keydown.escape.window="close()">
+    <div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @forelse ($products as $product)
@@ -46,9 +44,7 @@ function productModal() {
                     $imgUrl = $img ? asset('storage/' . $img) : '/images/gemarclogo.png';
                 @endphp
                 <div
-                    class="bg-white rounded-xl shadow flex flex-col h-full min-h-[370px] cursor-pointer"
-                    x-data="{ name: @js($product->name), price: @js($product->price), description: @js($product->description), image: @js($imgUrl), stock: @js($product->stock) }"
-                    @click="$dispatch('open-product', { name, price, description, image, stock })">
+                    class="bg-white rounded-xl shadow flex flex-col h-full min-h-[370px]">
 
                     <div class="w-full h-40 bg-gray-100 flex items-center justify-center rounded-t-xl overflow-hidden">
                         <img src="{{ $imgUrl }}" alt="{{ $product->name }}" class="max-h-36 object-contain">
@@ -56,18 +52,59 @@ function productModal() {
                     <div class="p-4 flex flex-col flex-1 w-full">
                         <div class="font-bold text-green-800 text-lg mb-1 line-clamp-1">{{ $product->name }}</div>
                         <div class="text-gray-600 text-sm mb-2 line-clamp-2">{{ $product->description }}</div>
-                        <div class="mt-auto flex items-center justify-between">
+                        <div class="mt-auto flex items-center justify-between gap-2">
                             <div class="text-orange-600 font-bold text-lg">₱{{ number_format($product->price,2) }}</div>
-                            @if($product->stock > 0)
-                                <form method="POST" action="{{ route('cart.add') }}" class="inline">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <input type="hidden" name="quantity" value="1">
-                                    <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded text-sm font-semibold hover:bg-green-700">Add to Cart</button>
-                                </form>
-                            @else
-                                <span class="bg-gray-400 text-white px-3 py-1 rounded text-sm font-semibold cursor-not-allowed">Out of Stock</span>
-                            @endif
+                            <div class="flex gap-2">
+                                @auth
+                                    @php
+                                        $alreadySaved = false;
+                                        $user = auth()->user();
+                                        if ($user) {
+                                            $savedListIds = \App\Models\SavedList::where('user_id', $user->id)->pluck('id');
+                                            $alreadySaved = \App\Models\SavedListItem::whereIn('saved_list_id', $savedListIds)->where('product_id', $product->id)->exists();
+                                        }
+                                    @endphp
+                                    @if(!$alreadySaved)
+                                        <form method="POST" action="{{ route('saved.store') }}">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-sm font-semibold hover:bg-blue-600" title="Save Product">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5v14l7-7 7 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2z" /></svg>
+                                                Save
+                                            </button>
+                                        </form>
+                                    @else
+                                        @php
+                                            $savedItemId = null;
+                                            if ($user) {
+                                                $savedItem = \App\Models\SavedListItem::whereIn('saved_list_id', $savedListIds)
+                                                    ->where('product_id', $product->id)
+                                                    ->first();
+                                                $savedItemId = $savedItem ? $savedItem->id : null;
+                                            }
+                                        @endphp
+                                        @if($savedItemId)
+                                            <form method="POST" action="{{ route('saved.destroy', $savedItemId) }}" style="display:inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm font-semibold hover:bg-blue-200" title="Unsave Product">Unsave</button>
+                                            </form>
+                                        @else
+                                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm font-semibold" title="Already Saved">Saved</span>
+                                        @endif
+                                    @endif
+                                @endauth
+                                @if($product->stock > 0)
+                                    <form method="POST" action="{{ route('cart.add') }}" class="inline">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="bg-green-600 text-white px-3 py-1 rounded text-sm font-semibold hover:bg-green-700">Add to Cart</button>
+                                    </form>
+                                @else
+                                    <span class="bg-gray-400 text-white px-3 py-1 rounded text-sm font-semibold cursor-not-allowed">Out of Stock</span>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>

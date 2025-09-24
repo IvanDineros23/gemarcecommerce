@@ -50,7 +50,7 @@
                 <a class="forgot-link small" href="{{ route('password.request') }}">Forgot?</a>
               @endif
             </div>
-            <input id="password" type="password" name="password" required autocomplete="current-password" class="form-control @error('password') is-invalid @enderror" placeholder="••••••••" onkeyup="checkCapsLock(event)" onkeydown="checkCapsLock(event)">
+            <input id="password" type="password" name="password" required autocomplete="current-password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter your password" onkeyup="checkCapsLock(event)" onkeydown="checkCapsLock(event)">
             <div id="caps-lock-alert" class="alert alert-warning py-2 px-3 mt-2 mb-0 small d-none" role="alert" style="font-size:0.95em;">
               <strong>Caps Lock is ON.</strong> Passwords are case-sensitive.
             </div>

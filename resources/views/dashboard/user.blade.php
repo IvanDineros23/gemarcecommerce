@@ -99,32 +99,34 @@ function searchBar() {
 }
 </script>
 @endpush
-    <!-- ...existing code... -->
-        <div class="flex flex-col md:flex-row gap-6 mb-8">
-        <!-- Create/Request Quote -->
-                <div class="bg-white rounded-xl shadow p-4 flex flex-col">
-                    <div class="text-lg font-bold text-green-800 mb-2 flex items-center gap-2">📝 Request a Quote</div>
-                    <a href="{{ route('quotes.create') }}" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded font-semibold w-max">Create Quote</a>
-        </div>
-        <!-- Recent Orders -->
-        <div class="bg-white rounded-xl shadow p-6 flex flex-col">
-            <div class="text-lg font-bold text-green-800 mb-2">Your Recent Orders</div>
-            <ul class="divide-y">
-                @forelse ($recentOrders as $o)
-                    <li class="flex items-center justify-between py-4">
-                        <div>
-                            <div class="font-semibold">#{{ $o->id }} · {{ $o->created_at->format('Y-m-d') }}</div>
-                            <div class="text-xs text-gray-500">{{ ucfirst($o->status) }}</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="font-semibold text-gray-800">₱{{ number_format($o->total_amount,2) }}</div>
-                            <a href="{{ route('orders.show',$o) }}" class="text-green-700 hover:underline text-xs ml-2">View</a>
-                        </div>
-                    </li>
-                @empty
-                    <li class="py-4 text-gray-400">No orders yet.</li>
-                @endforelse
-            </ul>
+    <!-- Centered Request a Quote and Recent Orders section -->
+    <div class="flex flex-col items-center justify-center w-full mb-8">
+        <div class="flex flex-col md:flex-row gap-6 w-full max-w-4xl justify-center">
+            <!-- Create/Request Quote -->
+            <div class="bg-white rounded-xl shadow p-4 flex flex-col flex-1 min-w-[260px] max-w-[350px] items-center">
+                <div class="text-lg font-bold text-green-800 mb-2 flex items-center gap-2">📝 Request a Quote</div>
+                <a href="{{ route('quotes.create') }}" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded font-semibold w-max">Create Quote</a>
+            </div>
+            <!-- Recent Orders -->
+            <div class="bg-white rounded-xl shadow p-6 flex flex-col flex-1 min-w-[260px] max-w-[350px] items-center">
+                <div class="text-lg font-bold text-green-800 mb-2">Your Recent Orders</div>
+                <ul class="divide-y w-full">
+                    @forelse ($recentOrders as $o)
+                        <li class="flex items-center justify-between py-4">
+                            <div>
+                                <div class="font-semibold">#{{ $o->id }} · {{ $o->created_at->format('Y-m-d') }}</div>
+                                <div class="text-xs text-gray-500">{{ ucfirst($o->status) }}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-gray-800">₱{{ number_format($o->total_amount,2) }}</div>
+                                <a href="{{ route('orders.show',$o) }}" class="text-green-700 hover:underline text-xs ml-2">View</a>
+                            </div>
+                        </li>
+                    @empty
+                        <li class="py-4 text-gray-400">No orders yet.</li>
+                    @endforelse
+                </ul>
+            </div>
         </div>
     </div>
     <div class="bg-white rounded-xl shadow p-6">
